@@ -180,6 +180,30 @@ const pct = (cur, prev) => {
 };
 const shortDate = d => { const p = d.split('-'); return `${parseInt(p[1])}/${parseInt(p[2])}`; };
 
+function fillDays(dates, n) {
+  // Generate last n days ending at the latest date in the dataset (or today)
+  const end = dates.length ? new Date(dates[dates.length - 1] + 'T00:00:00Z') : new Date();
+  const result = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(end);
+    d.setUTCDate(d.getUTCDate() - i);
+    result.push(d.toISOString().slice(0, 10));
+  }
+  return result;
+}
+
+function fillWeeks(weeks, n) {
+  // Generate last n ISO weeks ending at the latest week in the dataset
+  if (!weeks.length) return [];
+  const lastW = parseInt(weeks[weeks.length - 1].slice(1));
+  const result = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const w = lastW - i;
+    if (w > 0) result.push('W' + String(w).padStart(2, '0'));
+  }
+  return result;
+}
+
 function isoWeek(dateStr) {
   const d = new Date(dateStr + 'T00:00:00Z');
   const dayOfYear = Math.floor((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000) + 1;
@@ -358,7 +382,8 @@ async function init() {
 
   const cWeekly = aggregateWeekly(C).slice(-4);
   const pWeekly = aggregateWeekly(P).slice(-4);
-  const allWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-4);
+  const rawWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-4);
+  const allWeeks = fillWeeks(rawWeeks, 4);
   const cwMap = Object.fromEntries(cWeekly.map(w=>[w.week,w]));
   const pwMap = Object.fromEntries(pWeekly.map(w=>[w.week,w]));
 
@@ -400,8 +425,8 @@ async function init() {
     makeSeries('Bans',       totalWeekly.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
   ]);
 
-  // --- DAILY CHART (last 14 days, C+P separate) ---
-  const last14 = allDates.slice(-14);
+  // --- DAILY CHART (last 14 days, C+P separate, gaps filled with 0) ---
+  const last14 = fillDays(allDates, 14);
   buildChart('chartDaily', last14.map(shortDate), [
     makeSeries('C: Views',  last14.map(d=>(cMap[d]?.views||0)),      col.cViews,  'yLeft', 'area'),
     makeSeries('P: Views',  last14.map(d=>(pMap[d]?.views||0)),      col.pViews,  'yLeft', 'area'),
