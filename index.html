@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shill Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #0f1117; color: #e1e4ea; padding: 24px; min-height: 100vh; }
+
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #2a2d38; }
+  .header h1 { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
+  .header .meta { font-size: 12px; color: #4b5563; }
+
+  /* --- KPI SECTIONS --- */
+  .kpi-section { margin-bottom: 24px; }
+  .kpi-section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: #6b7280;
+    margin-bottom: 10px; padding-left: 4px; display: flex; align-items: center; gap: 8px;
+  }
+  .kpi-section-title .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-blue { background: #3b82f6; }
+  .dot-green { background: #10b981; }
+
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .kpi {
+    background: #1a1d27; border-radius: 8px; padding: 14px 16px;
+    border: 1px solid #2a2d38;
+  }
+  .kpi-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: #6b7280; margin-bottom: 4px; }
+  .kpi-val { font-size: 24px; font-weight: 700; color: #fff; }
+  .kpi-sub { font-size: 10px; color: #4b5563; margin-top: 2px; }
+  .kpi-accent { border-top: 2px solid; }
+  .kpi-accent.blue { border-color: #3b82f6; }
+  .kpi-accent.green { border-color: #10b981; }
+  .kpi-accent.yellow { border-color: #f59e0b; }
+  .kpi-accent.red { border-color: #ef4444; }
+  .kpi-accent.purple { border-color: #8b5cf6; }
+
+  /* --- CHARTS --- */
+  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .chart-card {
+    background: #1a1d27; border-radius: 10px; border: 1px solid #2a2d38; padding: 18px 20px;
+  }
+  .chart-card h2 { font-size: 14px; font-weight: 600; color: #e1e4ea; margin-bottom: 14px; }
+  .chart-card .chart-wrap { position: relative; height: 340px; }
+  .chart-card.full { grid-column: 1 / -1; }
+
+  /* --- WoW + ANALYTICS --- */
+  .section-title { font-size: 14px; font-weight: 600; color: #e1e4ea; margin-bottom: 14px; }
+  .wow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .card {
+    background: #1a1d27; border-radius: 10px; border: 1px solid #2a2d38; padding: 16px 18px;
+  }
+  .card h3 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; margin-bottom: 10px;
+  }
+  .wow-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .wow-table th {
+    text-align: right; padding: 5px 8px; color: #4b5563; font-weight: 500;
+    border-bottom: 1px solid #2a2d38; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .wow-table th:first-child { text-align: left; }
+  .wow-table td { text-align: right; padding: 5px 8px; color: #d1d5db; border-bottom: 1px solid #1f222d; }
+  .wow-table td:first-child { text-align: left; color: #9ca3af; font-weight: 500; }
+  .wow-table tr:hover td { background: #1f222d; }
+  .diff-up { color: #10b981; font-weight: 600; }
+  .diff-down { color: #ef4444; font-weight: 600; }
+  .diff-neutral { color: #6b7280; }
+
+  /* --- INSIGHTS --- */
+  .insights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .insight-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 10px 0;
+    border-bottom: 1px solid #1f222d;
+  }
+  .insight-item:last-child { border-bottom: none; }
+  .insight-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .insight-text { font-size: 13px; color: #d1d5db; line-height: 1.5; }
+  .insight-text strong { color: #fff; }
+  .val-up { color: #10b981; font-weight: 700; }
+  .val-down { color: #ef4444; font-weight: 700; }
+  .val-warn { color: #f59e0b; font-weight: 700; }
+
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+    .charts-row, .wow-grid, .insights-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 700px) {
+    body { padding: 14px; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .kpi-val { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SHILL DASHBOARD</h1>
+  <div class="meta"><span id="updatedAt">loading...</span></div>
+</div>
+
+<!-- KPI: COMMENTS -->
+<div class="kpi-section">
+  <div class="kpi-section-title"><span class="dot dot-blue"></span> COMMENTS</div>
+  <div class="kpi-grid">
+    <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="cViews">—</div></div>
+    <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="cEngage">—</div></div>
+    <div class="kpi kpi-accent yellow"><div class="kpi-label">Clicks</div><div class="kpi-val" id="cClicks">—</div></div>
+    <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="cTotal">—</div><div class="kpi-sub" id="cActiveSub"></div></div>
+    <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="cBans">—</div><div class="kpi-sub" id="cBansSub"></div></div>
+  </div>
+</div>
+
+<!-- KPI: POSTS -->
+<div class="kpi-section">
+  <div class="kpi-section-title"><span class="dot dot-green"></span> POSTS</div>
+  <div class="kpi-grid">
+    <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="pViews">—</div></div>
+    <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="pEngage">—</div></div>
+    <div class="kpi kpi-accent yellow"><div class="kpi-label">Clicks</div><div class="kpi-val" id="pClicks">—</div></div>
+    <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="pTotal">—</div></div>
+    <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="pBans">—</div></div>
+  </div>
+</div>
+
+<!-- CHARTS: 2 charts — Weekly (total) + Daily -->
+<div class="charts-row">
+  <div class="chart-card">
+    <h2>Weekly Total — last 4 weeks</h2>
+    <div class="chart-wrap"><canvas id="chartWeekly"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <h2>Daily — last 14 days</h2>
+    <div class="chart-wrap"><canvas id="chartDaily"></canvas></div>
+  </div>
+</div>
+
+<!-- ANALYTICS INSIGHTS -->
+<h2 class="section-title">Analytics</h2>
+<div class="insights-grid">
+  <div class="card">
+    <h3>Comments — Efficiency</h3>
+    <div id="insightsComments"></div>
+  </div>
+  <div class="card">
+    <h3>Posts — Efficiency</h3>
+    <div id="insightsPosts"></div>
+  </div>
+</div>
+
+<!-- WoW SUMMARY -->
+<h2 class="section-title">Week-over-Week</h2>
+<div class="wow-grid">
+  <div class="card">
+    <h3>Comments — WoW</h3>
+    <table class="wow-table">
+      <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Active</th><th>Bans</th><th>Views/Link</th></tr></thead>
+      <tbody id="wowComments"></tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Posts — WoW</h3>
+    <table class="wow-table">
+      <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Views/Link</th></tr></thead>
+      <tbody id="wowPosts"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const N = n => n != null ? n.toLocaleString('en-US') : '—';
+const pct = (cur, prev) => {
+  if (!prev || prev === 0) return '<span class="diff-neutral">—</span>';
+  const d = ((cur - prev) / prev * 100).toFixed(1);
+  if (d > 0) return `<span class="diff-up">+${d}%</span>`;
+  if (d < 0) return `<span class="diff-down">${d}%</span>`;
+  return '<span class="diff-neutral">0%</span>';
+};
+const shortDate = d => { const p = d.split('-'); return `${parseInt(p[1])}/${parseInt(p[2])}`; };
+
+function isoWeek(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00Z');
+  const dayOfYear = Math.floor((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000) + 1;
+  const weekDay = (d.getUTCDay() + 6) % 7;
+  const weekNum = Math.ceil((dayOfYear - weekDay + 3) / 7);
+  return `W${String(weekNum).padStart(2, '0')}`;
+}
+
+function aggregateWeekly(daily) {
+  const weeks = {};
+  for (const d of daily) {
+    const w = isoWeek(d.date);
+    if (!weeks[w]) weeks[w] = { week: w, views: 0, engagement: 0, clicks: 0, bans: 0, total_urls: 0 };
+    const b = weeks[w];
+    b.views += d.views || 0;  b.engagement += d.engagement || 0;
+    b.clicks += d.clicks || 0;  b.bans += d.bans || 0;  b.total_urls += d.total_urls || 0;
+  }
+  return Object.values(weeks).sort((a, b) => a.week.localeCompare(b.week));
+}
+
+function buildChart(canvasId, labels, datasets) {
+  return new Chart(document.getElementById(canvasId), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { position: 'bottom', labels: { color: '#6b7280', font: { size: 10 }, boxWidth: 10, padding: 12 } },
+        tooltip: {
+          backgroundColor: '#1a1d27', borderColor: '#2a2d38', borderWidth: 1,
+          titleColor: '#e1e4ea', bodyColor: '#d1d5db',
+          callbacks: { label: ctx => `${ctx.dataset.label}: ${N(ctx.raw)}` }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#4b5563', font: { size: 10 }, maxRotation: 0 }, grid: { color: '#1f222d' } },
+        yLeft: {
+          type: 'linear', position: 'left',
+          ticks: { color: '#3b82f6', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
+          grid: { color: '#1f222d' },
+          title: { display: true, text: 'Views', color: '#3b82f6', font: { size: 10 } }
+        },
+        yRight: {
+          type: 'linear', position: 'right',
+          ticks: { color: '#10b981', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Engage / Clicks / Links', color: '#10b981', font: { size: 10 } }
+        }
+      }
+    }
+  });
+}
+
+function makeSeries(label, data, color, axis, type) {
+  const s = { label, data, yAxisID: axis, borderColor: color.border, borderWidth: 2,
+    tension: 0.35, pointRadius: 3, pointBackgroundColor: color.border };
+  if (type === 'area') { s.fill = true; s.backgroundColor = color.bg; }
+  if (type === 'bar') { s.type = 'bar'; s.backgroundColor = color.bg; s.borderWidth = 1; s.borderRadius = 2; s.barPercentage = 0.4; }
+  return s;
+}
+
+// --- ANALYTICS ENGINE ---
+function generateInsights(weekly, label, hasBans) {
+  if (weekly.length < 1) return '<div class="insight-text" style="color:#4b5563">Not enough data yet</div>';
+
+  const curr = weekly[weekly.length - 1];
+  const prev = weekly.length >= 2 ? weekly[weekly.length - 2] : null;
+
+  const vpl = curr.total_urls ? Math.round(curr.views / curr.total_urls) : 0;
+  const epl = curr.total_urls ? (curr.engagement / curr.total_urls).toFixed(1) : 0;
+  const banRate = curr.total_urls ? (curr.bans / curr.total_urls * 100).toFixed(0) : 0;
+  const activeLinks = curr.total_urls - (curr.bans || 0);
+
+  let items = [];
+
+  // Views per link
+  if (prev && prev.total_urls) {
+    const prevVpl = Math.round(prev.views / prev.total_urls);
+    const diff = vpl - prevVpl;
+    const cls = diff > 0 ? 'val-up' : diff < 0 ? 'val-down' : 'val-warn';
+    const arrow = diff > 0 ? '+' : '';
+    items.push({
+      icon: '📊',
+      text: `<strong>${N(vpl)}</strong> views/link this week (was ${N(prevVpl)}). <span class="${cls}">${arrow}${N(diff)}</span> per link`
+    });
+  } else {
+    items.push({ icon: '📊', text: `<strong>${N(vpl)}</strong> views per link this week` });
+  }
+
+  // Engagement per link
+  items.push({ icon: '💬', text: `<strong>${epl}</strong> engagement per link (<strong>${N(curr.engagement)}</strong> total from <strong>${N(curr.total_urls)}</strong> links)` });
+
+  // Links volume change
+  if (prev) {
+    const linkDiff = curr.total_urls - prev.total_urls;
+    const cls = linkDiff > 0 ? 'val-up' : linkDiff < 0 ? 'val-down' : 'val-warn';
+    const arrow = linkDiff > 0 ? '+' : '';
+    items.push({
+      icon: '🔗',
+      text: `<strong>${N(curr.total_urls)}</strong> links this week (${prev ? `was ${N(prev.total_urls)}` : ''}). <span class="${cls}">${arrow}${N(linkDiff)}</span>`
+    });
+  }
+
+  // Views change
+  if (prev) {
+    const vDiff = ((curr.views - prev.views) / Math.max(prev.views, 1) * 100).toFixed(1);
+    const cls = vDiff > 0 ? 'val-up' : vDiff < 0 ? 'val-down' : 'val-warn';
+    items.push({
+      icon: '👁',
+      text: `Views: <strong>${N(curr.views)}</strong> (was ${N(prev.views)}). <span class="${cls}">${vDiff > 0 ? '+' : ''}${vDiff}%</span> WoW`
+    });
+  }
+
+  // Ban rate (comments only)
+  if (hasBans) {
+    if (prev && prev.total_urls) {
+      const prevBanRate = (prev.bans / prev.total_urls * 100).toFixed(0);
+      const cls = banRate > prevBanRate ? 'val-down' : banRate < prevBanRate ? 'val-up' : 'val-warn';
+      const trend = banRate > prevBanRate ? 'growing' : banRate < prevBanRate ? 'declining' : 'stable';
+      items.push({
+        icon: '⚠️',
+        text: `Ban rate: <span class="${cls}"><strong>${banRate}%</strong></span> (was ${prevBanRate}%). Trend: <span class="${cls}">${trend}</span>. Active: <strong>${N(activeLinks)}</strong> / ${N(curr.total_urls)}`
+      });
+    } else {
+      items.push({ icon: '⚠️', text: `Ban rate: <strong>${banRate}%</strong>. Active links: <strong>${N(activeLinks)}</strong> / ${N(curr.total_urls)}` });
+    }
+
+    // Views lost to bans estimate
+    if (curr.bans > 0 && vpl > 0) {
+      const lostViews = curr.bans * vpl;
+      items.push({
+        icon: '📉',
+        text: `Est. views lost to bans: <span class="val-down"><strong>~${N(lostViews)}</strong></span> (${N(curr.bans)} banned x ${N(vpl)} avg views/link)`
+      });
+    }
+  }
+
+  return items.map(i => `<div class="insight-item"><span class="insight-icon">${i.icon}</span><div class="insight-text">${i.text}</div></div>`).join('');
+}
+
+async function init() {
+  let data;
+  try {
+    const r = await fetch('data.json?v=' + Date.now());
+    data = await r.json();
+  } catch(e) { document.getElementById('updatedAt').textContent = 'error loading data'; return; }
+
+  document.getElementById('updatedAt').textContent = 'updated: ' + data.updated;
+
+  const C = data.comments || [];
+  const P = data.posts || [];
+
+  // --- KPIs ---
+  const sum = (arr, k) => arr.reduce((s, d) => s + (d[k]||0), 0);
+
+  document.getElementById('cViews').textContent = N(sum(C,'views'));
+  document.getElementById('cEngage').textContent = N(sum(C,'engagement'));
+  document.getElementById('cClicks').textContent = N(sum(C,'clicks'));
+  document.getElementById('cTotal').textContent = N(sum(C,'total_urls'));
+  const cOk = sum(C,'total_urls') - sum(C,'bans');
+  document.getElementById('cActiveSub').textContent = `active: ${N(cOk)}`;
+  document.getElementById('cBans').textContent = N(sum(C,'bans'));
+  document.getElementById('cBansSub').textContent = `${(sum(C,'bans') / Math.max(sum(C,'total_urls'),1) * 100).toFixed(0)}% of total`;
+
+  document.getElementById('pViews').textContent = N(sum(P,'views'));
+  document.getElementById('pEngage').textContent = N(sum(P,'engagement'));
+  document.getElementById('pClicks').textContent = N(sum(P,'clicks'));
+  document.getElementById('pTotal').textContent = N(sum(P,'total_urls'));
+  document.getElementById('pBans').textContent = N(sum(P,'bans'));
+
+  // --- Aggregations ---
+  const allDates = [...new Set([...C.map(d=>d.date),...P.map(d=>d.date)])].sort();
+  const cMap = Object.fromEntries(C.map(d=>[d.date,d]));
+  const pMap = Object.fromEntries(P.map(d=>[d.date,d]));
+
+  const cWeekly = aggregateWeekly(C).slice(-4);
+  const pWeekly = aggregateWeekly(P).slice(-4);
+  const allWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-4);
+  const cwMap = Object.fromEntries(cWeekly.map(w=>[w.week,w]));
+  const pwMap = Object.fromEntries(pWeekly.map(w=>[w.week,w]));
+
+  // Total weekly (C+P merged)
+  const totalWeekly = allWeeks.map(w => ({
+    week: w,
+    views: (cwMap[w]?.views||0) + (pwMap[w]?.views||0),
+    engagement: (cwMap[w]?.engagement||0) + (pwMap[w]?.engagement||0),
+    clicks: (cwMap[w]?.clicks||0) + (pwMap[w]?.clicks||0),
+    total_urls: (cwMap[w]?.total_urls||0) + (pwMap[w]?.total_urls||0),
+    bans: (cwMap[w]?.bans||0) + (pwMap[w]?.bans||0),
+  }));
+
+  // --- Colors ---
+  const tc = {
+    views:  { bg: 'rgba(59,130,246,0.12)', border: '#3b82f6' },
+    engage: { bg: 'rgba(16,185,129,0.12)', border: '#10b981' },
+    clicks: { bg: 'rgba(245,158,11,0.12)', border: '#f59e0b' },
+    links:  { bg: 'rgba(139,92,246,0.30)', border: '#8b5cf6' },
+    bans:   { bg: 'rgba(239,68,68,0.30)',  border: '#ef4444' },
+  };
+  const col = {
+    cViews:  { bg: 'rgba(59,130,246,0.10)', border: '#3b82f6' },
+    cEngage: { bg: 'rgba(16,185,129,0.10)', border: '#10b981' },
+    cClicks: { bg: 'rgba(245,158,11,0.10)', border: '#f59e0b' },
+    cLinks:  { bg: 'rgba(139,92,246,0.25)', border: '#8b5cf6' },
+    pViews:  { bg: 'rgba(59,130,246,0.06)', border: '#60a5fa' },
+    pEngage: { bg: 'rgba(16,185,129,0.06)', border: '#34d399' },
+    pClicks: { bg: 'rgba(245,158,11,0.06)', border: '#fbbf24' },
+    pLinks:  { bg: 'rgba(139,92,246,0.15)', border: '#a78bfa' },
+  };
+
+  // --- WEEKLY CHART (Total: C+P combined) ---
+  buildChart('chartWeekly', allWeeks, [
+    makeSeries('Views',      totalWeekly.map(w=>w.views),      tc.views,  'yLeft',  'area'),
+    makeSeries('Engagement', totalWeekly.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('Clicks',     totalWeekly.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('Links',      totalWeekly.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
+    makeSeries('Bans',       totalWeekly.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
+  ]);
+
+  // --- DAILY CHART (last 14 days, C+P separate) ---
+  const last14 = allDates.slice(-14);
+  buildChart('chartDaily', last14.map(shortDate), [
+    makeSeries('C: Views',  last14.map(d=>(cMap[d]?.views||0)),      col.cViews,  'yLeft', 'area'),
+    makeSeries('P: Views',  last14.map(d=>(pMap[d]?.views||0)),      col.pViews,  'yLeft', 'area'),
+    makeSeries('C: Engage', last14.map(d=>(cMap[d]?.engagement||0)), col.cEngage, 'yRight', 'line'),
+    makeSeries('P: Engage', last14.map(d=>(pMap[d]?.engagement||0)), col.pEngage, 'yRight', 'line'),
+    makeSeries('C: Clicks', last14.map(d=>(cMap[d]?.clicks||0)),     col.cClicks, 'yRight', 'line'),
+    makeSeries('P: Clicks', last14.map(d=>(pMap[d]?.clicks||0)),     col.pClicks, 'yRight', 'line'),
+    makeSeries('C: Links',  last14.map(d=>(cMap[d]?.total_urls||0)), col.cLinks,  'yRight', 'bar'),
+    makeSeries('P: Links',  last14.map(d=>(pMap[d]?.total_urls||0)), col.pLinks,  'yRight', 'bar'),
+  ]);
+
+  // --- ANALYTICS INSIGHTS ---
+  document.getElementById('insightsComments').innerHTML = generateInsights(cWeekly, 'Comments', true);
+  document.getElementById('insightsPosts').innerHTML = generateInsights(pWeekly, 'Posts', false);
+
+  // --- WoW TABLES ---
+  function renderWoW(tbodyId, weekly, hasBans) {
+    const tbody = document.getElementById(tbodyId);
+    let rows = '';
+    for (let i = 0; i < weekly.length; i++) {
+      const w = weekly[i];
+      const prev = i > 0 ? weekly[i-1] : null;
+      const active = w.total_urls - (w.bans||0);
+      const vpl = w.total_urls ? Math.round(w.views / w.total_urls) : 0;
+      rows += `<tr>
+        <td>${w.week}</td>
+        <td>${N(w.views)} ${prev ? pct(w.views, prev.views) : ''}</td>
+        <td>${N(w.engagement)} ${prev ? pct(w.engagement, prev.engagement) : ''}</td>
+        <td>${N(w.clicks)} ${prev ? pct(w.clicks, prev.clicks) : ''}</td>
+        <td>${N(w.total_urls)}</td>
+        ${hasBans ? `<td>${N(active)}</td><td>${N(w.bans)} ${prev ? pct(w.bans, prev.bans) : ''}</td>` : ''}
+        <td>${N(vpl)}</td>
+      </tr>`;
+    }
+    tbody.innerHTML = rows;
+  }
+
+  renderWoW('wowComments', cWeekly, true);
+  renderWoW('wowPosts', pWeekly, false);
+}
+
+init();
+</script>
+</body>
+</html>
