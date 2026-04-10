@@ -125,15 +125,15 @@
   </div>
 </div>
 
-<!-- CHARTS: 2 charts — Weekly (total) + Daily -->
+<!-- CHARTS: 2 weekly charts — Comments + Posts -->
 <div class="charts-row">
   <div class="chart-card">
-    <h2>Weekly Total — last 4 weeks</h2>
-    <div class="chart-wrap"><canvas id="chartWeekly"></canvas></div>
+    <h2>Comments — Weekly (last 4 weeks)</h2>
+    <div class="chart-wrap"><canvas id="chartWeeklyComments"></canvas></div>
   </div>
   <div class="chart-card">
-    <h2>Daily — last 14 days</h2>
-    <div class="chart-wrap"><canvas id="chartDaily"></canvas></div>
+    <h2>Posts — Weekly (last 4 weeks)</h2>
+    <div class="chart-wrap"><canvas id="chartWeeklyPosts"></canvas></div>
   </div>
 </div>
 
@@ -416,26 +416,23 @@ async function init() {
     pLinks:  { bg: 'rgba(139,92,246,0.15)', border: '#a78bfa' },
   };
 
-  // --- WEEKLY CHART (Total: C+P combined) ---
-  buildChart('chartWeekly', allWeeks, [
-    makeSeries('Views',      totalWeekly.map(w=>w.views),      tc.views,  'yLeft',  'area'),
-    makeSeries('Engagement', totalWeekly.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('Clicks',     totalWeekly.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
-    makeSeries('Links',      totalWeekly.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
-    makeSeries('Bans',       totalWeekly.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
+  // --- WEEKLY CHART: Comments ---
+  const cWeeklyFull = allWeeks.map(w => cwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  buildChart('chartWeeklyComments', allWeeks, [
+    makeSeries('Views',      cWeeklyFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
+    makeSeries('Engagement', cWeeklyFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('Clicks',     cWeeklyFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('Links',      cWeeklyFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
+    makeSeries('Bans',       cWeeklyFull.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
   ]);
 
-  // --- DAILY CHART (last 14 days, C+P separate, gaps filled with 0) ---
-  const last14 = fillDays(allDates, 14);
-  buildChart('chartDaily', last14.map(shortDate), [
-    makeSeries('C: Views',  last14.map(d=>(cMap[d]?.views||0)),      col.cViews,  'yLeft', 'area'),
-    makeSeries('P: Views',  last14.map(d=>(pMap[d]?.views||0)),      col.pViews,  'yLeft', 'area'),
-    makeSeries('C: Engage', last14.map(d=>(cMap[d]?.engagement||0)), col.cEngage, 'yRight', 'line'),
-    makeSeries('P: Engage', last14.map(d=>(pMap[d]?.engagement||0)), col.pEngage, 'yRight', 'line'),
-    makeSeries('C: Clicks', last14.map(d=>(cMap[d]?.clicks||0)),     col.cClicks, 'yRight', 'line'),
-    makeSeries('P: Clicks', last14.map(d=>(pMap[d]?.clicks||0)),     col.pClicks, 'yRight', 'line'),
-    makeSeries('C: Links',  last14.map(d=>(cMap[d]?.total_urls||0)), col.cLinks,  'yRight', 'bar'),
-    makeSeries('P: Links',  last14.map(d=>(pMap[d]?.total_urls||0)), col.pLinks,  'yRight', 'bar'),
+  // --- WEEKLY CHART: Posts ---
+  const pWeeklyFull = allWeeks.map(w => pwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  buildChart('chartWeeklyPosts', allWeeks, [
+    makeSeries('Views',      pWeeklyFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
+    makeSeries('Engagement', pWeeklyFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('Clicks',     pWeeklyFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('Links',      pWeeklyFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
   ]);
 
   // --- ANALYTICS INSIGHTS ---
