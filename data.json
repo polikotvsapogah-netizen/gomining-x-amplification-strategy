@@ -1,26 +1,25 @@
 {
-  "updated": "2026-04-10 19:32 UTC",
-  "_spreadsheet_title": "GoMining X AMPLIFICATION STRATEGY",
+  "updated": "2026-04-12 19:13 UTC",
   "comments": [
     {
       "date": "2026-03-13",
-      "views": 56074,
-      "engagement": 2521,
-      "clicks": 1038,
-      "likes": 1453,
+      "views": 55891,
+      "engagement": 2507,
+      "clicks": 1032,
+      "likes": 1445,
       "rts": 30,
       "bans": 267,
-      "total_urls": 323
+      "total_urls": 322
     },
     {
       "date": "2026-03-24",
-      "views": 224967,
-      "engagement": 22495,
+      "views": 214821,
+      "engagement": 21626,
       "clicks": 1985,
-      "likes": 19923,
+      "likes": 19054,
       "rts": 587,
-      "bans": 901,
-      "total_urls": 1316
+      "bans": 858,
+      "total_urls": 1237
     },
     {
       "date": "2026-03-25",
@@ -34,45 +33,45 @@
     },
     {
       "date": "2026-04-10",
-      "views": 521950,
-      "engagement": 31069,
-      "clicks": 12793,
-      "likes": 17660,
-      "rts": 616,
-      "bans": 2100,
-      "total_urls": 3509
+      "views": 581762,
+      "engagement": 32759,
+      "clicks": 13489,
+      "likes": 18532,
+      "rts": 738,
+      "bans": 2118,
+      "total_urls": 4139
     }
   ],
   "posts": [
     {
       "date": "2026-03-24",
-      "views": 74242,
-      "engagement": 3285,
+      "views": 49668,
+      "engagement": 2833,
       "clicks": 1985,
-      "likes": 1126,
-      "rts": 174,
+      "likes": 736,
+      "rts": 112,
       "bans": 0,
-      "total_urls": 170
+      "total_urls": 109
     },
     {
       "date": "2026-03-25",
-      "views": 32825,
-      "engagement": 2870,
+      "views": 20735,
+      "engagement": 2647,
       "clicks": 2265,
-      "likes": 526,
-      "rts": 79,
+      "likes": 333,
+      "rts": 49,
       "bans": 0,
-      "total_urls": 77
+      "total_urls": 48
     },
     {
       "date": "2026-04-10",
-      "views": 93755,
-      "engagement": 3173,
-      "clicks": 1306,
-      "likes": 1616,
-      "rts": 251,
-      "bans": 36,
-      "total_urls": 799
+      "views": 395083,
+      "engagement": 12602,
+      "clicks": 5189,
+      "likes": 6400,
+      "rts": 1013,
+      "bans": 109,
+      "total_urls": 2148
     }
   ]
 }
