@@ -83,6 +83,13 @@
   .val-down { color: #ef4444; font-weight: 700; }
   .val-warn { color: #f59e0b; font-weight: 700; }
 
+  .wk-btn {
+    background: #1a1d27; border: 1px solid #2a2d38; color: #6b7280; padding: 4px 12px;
+    border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
+  }
+  .wk-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+  .wk-btn:hover:not(.active) { border-color: #4b5563; color: #d1d5db; }
+
   @media (max-width: 1100px) {
     .kpi-grid { grid-template-columns: repeat(3, 1fr); }
     .charts-row, .wow-grid, .insights-grid { grid-template-columns: 1fr; }
@@ -98,7 +105,13 @@
 
 <div class="header">
   <h1>SHILL DASHBOARD</h1>
-  <div class="meta"><span id="updatedAt">loading...</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="display:flex;gap:4px">
+      <button class="wk-btn active" data-weeks="4">4W</button>
+      <button class="wk-btn" data-weeks="12">12W</button>
+    </div>
+    <div class="meta"><span id="updatedAt">loading...</span></div>
+  </div>
 </div>
 
 <!-- KPI: COMMENTS -->
@@ -345,101 +358,64 @@ function generateInsights(weekly, label, hasBans) {
   return items.map(i => `<div class="insight-item"><span class="insight-icon">${i.icon}</span><div class="insight-text">${i.text}</div></div>`).join('');
 }
 
-async function init() {
-  let data;
-  try {
-    const r = await fetch('data.json?v=' + Date.now());
-    data = await r.json();
-  } catch(e) { document.getElementById('updatedAt').textContent = 'error loading data'; return; }
+let _dashData = null;
+let _chartInstances = {};
+let _activeWeeks = 4;
 
-  document.getElementById('updatedAt').textContent = 'updated: ' + data.updated;
+const tc = {
+  views:  { bg: 'rgba(59,130,246,0.12)', border: '#3b82f6' },
+  engage: { bg: 'rgba(16,185,129,0.12)', border: '#10b981' },
+  clicks: { bg: 'rgba(245,158,11,0.12)', border: '#f59e0b' },
+  links:  { bg: 'rgba(139,92,246,0.30)', border: '#8b5cf6' },
+  bans:   { bg: 'rgba(239,68,68,0.30)',  border: '#ef4444' },
+};
 
-  const C = data.comments || [];
-  const P = data.posts || [];
+function renderCharts(weekCount) {
+  // Destroy old charts
+  for (const id of Object.keys(_chartInstances)) {
+    _chartInstances[id].destroy();
+    delete _chartInstances[id];
+  }
 
-  // --- KPIs ---
-  const sum = (arr, k) => arr.reduce((s, d) => s + (d[k]||0), 0);
+  const C = _dashData.comments || [];
+  const P = _dashData.posts || [];
 
-  document.getElementById('cViews').textContent = N(sum(C,'views'));
-  document.getElementById('cEngage').textContent = N(sum(C,'engagement'));
-  document.getElementById('cClicks').textContent = N(sum(C,'clicks'));
-  document.getElementById('cTotal').textContent = N(sum(C,'total_urls'));
-  const cOk = sum(C,'total_urls') - sum(C,'bans');
-  document.getElementById('cActiveSub').textContent = `active: ${N(cOk)}`;
-  document.getElementById('cBans').textContent = N(sum(C,'bans'));
-  document.getElementById('cBansSub').textContent = `${(sum(C,'bans') / Math.max(sum(C,'total_urls'),1) * 100).toFixed(0)}% of total`;
-
-  document.getElementById('pViews').textContent = N(sum(P,'views'));
-  document.getElementById('pEngage').textContent = N(sum(P,'engagement'));
-  document.getElementById('pClicks').textContent = N(sum(P,'clicks'));
-  document.getElementById('pTotal').textContent = N(sum(P,'total_urls'));
-  document.getElementById('pBans').textContent = N(sum(P,'bans'));
-
-  // --- Aggregations ---
-  const allDates = [...new Set([...C.map(d=>d.date),...P.map(d=>d.date)])].sort();
-  const cMap = Object.fromEntries(C.map(d=>[d.date,d]));
-  const pMap = Object.fromEntries(P.map(d=>[d.date,d]));
-
-  const cWeekly = aggregateWeekly(C).slice(-4);
-  const pWeekly = aggregateWeekly(P).slice(-4);
-  const rawWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-4);
-  const allWeeks = fillWeeks(rawWeeks, 4);
+  const cWeekly = aggregateWeekly(C).slice(-weekCount);
+  const pWeekly = aggregateWeekly(P).slice(-weekCount);
+  const rawWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-weekCount);
+  const allWeeks = fillWeeks(rawWeeks, weekCount);
   const cwMap = Object.fromEntries(cWeekly.map(w=>[w.week,w]));
   const pwMap = Object.fromEntries(pWeekly.map(w=>[w.week,w]));
 
-  // Total weekly (C+P merged)
-  const totalWeekly = allWeeks.map(w => ({
-    week: w,
-    views: (cwMap[w]?.views||0) + (pwMap[w]?.views||0),
-    engagement: (cwMap[w]?.engagement||0) + (pwMap[w]?.engagement||0),
-    clicks: (cwMap[w]?.clicks||0) + (pwMap[w]?.clicks||0),
-    total_urls: (cwMap[w]?.total_urls||0) + (pwMap[w]?.total_urls||0),
-    bans: (cwMap[w]?.bans||0) + (pwMap[w]?.bans||0),
-  }));
-
-  // --- Colors ---
-  const tc = {
-    views:  { bg: 'rgba(59,130,246,0.12)', border: '#3b82f6' },
-    engage: { bg: 'rgba(16,185,129,0.12)', border: '#10b981' },
-    clicks: { bg: 'rgba(245,158,11,0.12)', border: '#f59e0b' },
-    links:  { bg: 'rgba(139,92,246,0.30)', border: '#8b5cf6' },
-    bans:   { bg: 'rgba(239,68,68,0.30)',  border: '#ef4444' },
-  };
-  const col = {
-    cViews:  { bg: 'rgba(59,130,246,0.10)', border: '#3b82f6' },
-    cEngage: { bg: 'rgba(16,185,129,0.10)', border: '#10b981' },
-    cClicks: { bg: 'rgba(245,158,11,0.10)', border: '#f59e0b' },
-    cLinks:  { bg: 'rgba(139,92,246,0.25)', border: '#8b5cf6' },
-    pViews:  { bg: 'rgba(59,130,246,0.06)', border: '#60a5fa' },
-    pEngage: { bg: 'rgba(16,185,129,0.06)', border: '#34d399' },
-    pClicks: { bg: 'rgba(245,158,11,0.06)', border: '#fbbf24' },
-    pLinks:  { bg: 'rgba(139,92,246,0.15)', border: '#a78bfa' },
-  };
-
-  // --- WEEKLY CHART: Comments ---
-  const cWeeklyFull = allWeeks.map(w => cwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
-  buildChart('chartWeeklyComments', allWeeks, [
-    makeSeries('Views',      cWeeklyFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
-    makeSeries('Engagement', cWeeklyFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('Clicks',     cWeeklyFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
-    makeSeries('Links',      cWeeklyFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
-    makeSeries('Bans',       cWeeklyFull.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
+  // Comments chart
+  const cFull = allWeeks.map(w => cwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  _chartInstances['chartWeeklyComments'] = buildChart('chartWeeklyComments', allWeeks, [
+    makeSeries('Views',      cFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
+    makeSeries('Engagement', cFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('Clicks',     cFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
+    makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
   ]);
 
-  // --- WEEKLY CHART: Posts ---
-  const pWeeklyFull = allWeeks.map(w => pwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
-  buildChart('chartWeeklyPosts', allWeeks, [
-    makeSeries('Views',      pWeeklyFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
-    makeSeries('Engagement', pWeeklyFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('Clicks',     pWeeklyFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
-    makeSeries('Links',      pWeeklyFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
+  // Posts chart
+  const pFull = allWeeks.map(w => pwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  _chartInstances['chartWeeklyPosts'] = buildChart('chartWeeklyPosts', allWeeks, [
+    makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
+    makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('Clicks',     pFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
   ]);
 
-  // --- ANALYTICS INSIGHTS ---
+  // Update chart titles
+  document.querySelector('#chartWeeklyComments').closest('.chart-card').querySelector('h2').textContent =
+    `Comments — Weekly (last ${weekCount} weeks)`;
+  document.querySelector('#chartWeeklyPosts').closest('.chart-card').querySelector('h2').textContent =
+    `Posts — Weekly (last ${weekCount} weeks)`;
+
+  // Analytics & WoW
   document.getElementById('insightsComments').innerHTML = generateInsights(cWeekly, 'Comments', true);
   document.getElementById('insightsPosts').innerHTML = generateInsights(pWeekly, 'Posts', false);
 
-  // --- WoW TABLES ---
   function renderWoW(tbodyId, weekly, hasBans) {
     const tbody = document.getElementById(tbodyId);
     let rows = '';
@@ -460,9 +436,48 @@ async function init() {
     }
     tbody.innerHTML = rows;
   }
-
   renderWoW('wowComments', cWeekly, true);
   renderWoW('wowPosts', pWeekly, false);
+}
+
+async function init() {
+  try {
+    const r = await fetch('data.json?v=' + Date.now());
+    _dashData = await r.json();
+  } catch(e) { document.getElementById('updatedAt').textContent = 'error loading data'; return; }
+
+  document.getElementById('updatedAt').textContent = 'updated: ' + _dashData.updated;
+
+  const C = _dashData.comments || [];
+  const P = _dashData.posts || [];
+  const sum = (arr, k) => arr.reduce((s, d) => s + (d[k]||0), 0);
+
+  document.getElementById('cViews').textContent = N(sum(C,'views'));
+  document.getElementById('cEngage').textContent = N(sum(C,'engagement'));
+  document.getElementById('cClicks').textContent = N(sum(C,'clicks'));
+  document.getElementById('cTotal').textContent = N(sum(C,'total_urls'));
+  const cOk = sum(C,'total_urls') - sum(C,'bans');
+  document.getElementById('cActiveSub').textContent = `active: ${N(cOk)}`;
+  document.getElementById('cBans').textContent = N(sum(C,'bans'));
+  document.getElementById('cBansSub').textContent = `${(sum(C,'bans') / Math.max(sum(C,'total_urls'),1) * 100).toFixed(0)}% of total`;
+
+  document.getElementById('pViews').textContent = N(sum(P,'views'));
+  document.getElementById('pEngage').textContent = N(sum(P,'engagement'));
+  document.getElementById('pClicks').textContent = N(sum(P,'clicks'));
+  document.getElementById('pTotal').textContent = N(sum(P,'total_urls'));
+  document.getElementById('pBans').textContent = N(sum(P,'bans'));
+
+  renderCharts(_activeWeeks);
+
+  // Week toggle buttons
+  document.querySelectorAll('.wk-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.wk-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _activeWeeks = parseInt(btn.dataset.weeks);
+      renderCharts(_activeWeeks);
+    });
+  });
 }
 
 init();
