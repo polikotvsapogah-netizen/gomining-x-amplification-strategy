@@ -1,5 +1,6 @@
 {
-  "updated": "2026-04-16 03:41 UTC",
+  "updated": "2026-04-16 04:06 UTC",
+  "_spreadsheet_title": "GoMining X AMPLIFICATION STRATEGY",
   "comments": [
     {
       "date": "2026-03-13",
@@ -33,13 +34,13 @@
     },
     {
       "date": "2026-03-24",
-      "views": 214821,
-      "engagement": 21626,
+      "views": 176127,
+      "engagement": 17201,
       "clicks": 1985,
-      "likes": 19054,
-      "rts": 587,
-      "bans": 858,
-      "total_urls": 1237
+      "likes": 14641,
+      "rts": 575,
+      "bans": 686,
+      "total_urls": 961
     },
     {
       "date": "2026-03-25",
@@ -203,13 +204,13 @@
     },
     {
       "date": "2026-04-10",
-      "views": 581762,
-      "engagement": 55183,
+      "views": 562078,
+      "engagement": 54780,
       "clicks": 35913,
-      "likes": 18532,
-      "rts": 738,
-      "bans": 2118,
-      "total_urls": 4139
+      "likes": 18167,
+      "rts": 700,
+      "bans": 2102,
+      "total_urls": 3465
     }
   ],
   "posts": [
@@ -235,23 +236,23 @@
     },
     {
       "date": "2026-03-24",
-      "views": 49668,
-      "engagement": 2833,
+      "views": 41318,
+      "engagement": 2673,
       "clicks": 1985,
-      "likes": 736,
-      "rts": 112,
+      "likes": 597,
+      "rts": 91,
       "bans": 0,
-      "total_urls": 109
+      "total_urls": 88
     },
     {
       "date": "2026-03-25",
-      "views": 20735,
-      "engagement": 2647,
+      "views": 15958,
+      "engagement": 2542,
       "clicks": 2265,
-      "likes": 333,
-      "rts": 49,
+      "likes": 242,
+      "rts": 35,
       "bans": 0,
-      "total_urls": 48
+      "total_urls": 34
     },
     {
       "date": "2026-03-26",
@@ -405,13 +406,13 @@
     },
     {
       "date": "2026-04-10",
-      "views": 395083,
-      "engagement": 43326,
+      "views": 275821,
+      "engagement": 41013,
       "clicks": 35913,
-      "likes": 6400,
-      "rts": 1013,
-      "bans": 109,
-      "total_urls": 2148
+      "likes": 4413,
+      "rts": 687,
+      "bans": 75,
+      "total_urls": 1018
     }
   ]
 }
