@@ -1,5 +1,6 @@
 {
-  "updated": "2026-04-17 16:09 UTC",
+  "updated": "2026-04-17 16:15 UTC",
+  "_spreadsheet_title": "GoMining X AMPLIFICATION STRATEGY",
   "comments": [
     {
       "date": "2026-03-07",
@@ -313,33 +314,13 @@
     },
     {
       "date": "2026-04-12",
-      "views": 0,
-      "engagement": 18410,
+      "views": 18336,
+      "engagement": 19097,
       "clicks": 18383,
-      "likes": 24,
-      "rts": 3,
-      "bans": 3,
-      "total_urls": 3
-    },
-    {
-      "date": "2026-04-16",
-      "views": 11302,
-      "engagement": 744,
-      "clicks": 306,
-      "likes": 435,
-      "rts": 3,
-      "bans": 58,
-      "total_urls": 63
-    },
-    {
-      "date": "2026-04-17",
-      "views": 7034,
-      "engagement": 423,
-      "clicks": 174,
-      "likes": 242,
-      "rts": 7,
-      "bans": 33,
-      "total_urls": 51
+      "likes": 701,
+      "rts": 13,
+      "bans": 94,
+      "total_urls": 117
     }
   ],
   "posts": [
@@ -655,29 +636,9 @@
     },
     {
       "date": "2026-04-12",
-      "views": 0,
-      "likes": 0,
-      "rts": 0,
-      "bans": 0,
-      "total_urls": 0,
-      "clicks": 18383,
-      "engagement": 18383
-    },
-    {
-      "date": "2026-04-16",
-      "views": 0,
-      "likes": 0,
-      "rts": 0,
-      "bans": 0,
-      "total_urls": 0,
-      "clicks": 306,
-      "engagement": 306
-    },
-    {
-      "date": "2026-04-17",
       "views": 722,
-      "engagement": 184,
-      "clicks": 174,
+      "engagement": 18393,
+      "clicks": 18383,
       "likes": 6,
       "rts": 4,
       "bans": 2,
