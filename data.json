@@ -1,5 +1,6 @@
 {
-  "updated": "2026-04-17 08:37 UTC",
+  "updated": "2026-04-17 16:08 UTC",
+  "_spreadsheet_title": "GoMining X AMPLIFICATION STRATEGY",
   "comments": [
     {
       "date": "2026-03-07",
@@ -238,8 +239,8 @@
       "clicks": 1947,
       "likes": 726,
       "rts": 50,
-      "bans": 152,
-      "total_urls": 154
+      "bans": 165,
+      "total_urls": 167
     },
     {
       "date": "2026-04-02",
@@ -248,8 +249,8 @@
       "clicks": 1783,
       "likes": 109,
       "rts": 15,
-      "bans": 3,
-      "total_urls": 53
+      "bans": 5,
+      "total_urls": 55
     },
     {
       "date": "2026-04-03",
@@ -273,43 +274,73 @@
     },
     {
       "date": "2026-04-07",
-      "views": 38436,
-      "engagement": 8023,
+      "views": 25421,
+      "engagement": 7716,
       "clicks": 7013,
-      "likes": 953,
-      "rts": 57,
-      "bans": 143,
-      "total_urls": 202
+      "likes": 662,
+      "rts": 41,
+      "bans": 218,
+      "total_urls": 288
     },
     {
       "date": "2026-04-08",
-      "views": 23285,
-      "engagement": 6786,
+      "views": 30729,
+      "engagement": 7128,
       "clicks": 5272,
-      "likes": 1492,
-      "rts": 22,
-      "bans": 81,
-      "total_urls": 118
+      "likes": 1774,
+      "rts": 82,
+      "bans": 148,
+      "total_urls": 244
     },
     {
       "date": "2026-04-09",
-      "views": 6737,
-      "engagement": 53840,
+      "views": 6992,
+      "engagement": 54088,
       "clicks": 52144,
-      "likes": 1696,
-      "rts": 0,
-      "bans": 26,
-      "total_urls": 27
+      "likes": 1917,
+      "rts": 27,
+      "bans": 60,
+      "total_urls": 76
     },
     {
       "date": "2026-04-10",
-      "views": 1118,
-      "engagement": 36062,
-      "clicks": 35913,
-      "likes": 149,
-      "rts": 0,
-      "bans": 4,
-      "total_urls": 6
+      "views": 3800,
+      "engagement": 51444,
+      "clicks": 51144,
+      "likes": 281,
+      "rts": 19,
+      "bans": 17,
+      "total_urls": 63
+    },
+    {
+      "date": "2026-04-12",
+      "views": 0,
+      "engagement": 18410,
+      "clicks": 18383,
+      "likes": 24,
+      "rts": 3,
+      "bans": 3,
+      "total_urls": 3
+    },
+    {
+      "date": "2026-04-16",
+      "views": 11302,
+      "engagement": 744,
+      "clicks": 306,
+      "likes": 435,
+      "rts": 3,
+      "bans": 58,
+      "total_urls": 63
+    },
+    {
+      "date": "2026-04-17",
+      "views": 7034,
+      "engagement": 423,
+      "clicks": 174,
+      "likes": 242,
+      "rts": 7,
+      "bans": 33,
+      "total_urls": 51
     }
   ],
   "posts": [
@@ -605,23 +636,53 @@
     },
     {
       "date": "2026-04-09",
-      "views": 5402,
-      "engagement": 52247,
+      "views": 3252,
+      "engagement": 52225,
       "clicks": 52144,
-      "likes": 86,
-      "rts": 17,
-      "bans": 0,
+      "likes": 68,
+      "rts": 13,
+      "bans": 4,
       "total_urls": 16
     },
     {
       "date": "2026-04-10",
-      "views": 9697,
-      "engagement": 36144,
-      "clicks": 35913,
-      "likes": 196,
-      "rts": 35,
-      "bans": 0,
+      "views": 11119,
+      "engagement": 51365,
+      "clicks": 51144,
+      "likes": 185,
+      "rts": 36,
+      "bans": 4,
       "total_urls": 33
+    },
+    {
+      "date": "2026-04-12",
+      "views": 0,
+      "likes": 0,
+      "rts": 0,
+      "bans": 0,
+      "total_urls": 0,
+      "clicks": 18383,
+      "engagement": 18383
+    },
+    {
+      "date": "2026-04-16",
+      "views": 0,
+      "likes": 0,
+      "rts": 0,
+      "bans": 0,
+      "total_urls": 0,
+      "clicks": 306,
+      "engagement": 306
+    },
+    {
+      "date": "2026-04-17",
+      "views": 722,
+      "engagement": 184,
+      "clicks": 174,
+      "likes": 6,
+      "rts": 4,
+      "bans": 2,
+      "total_urls": 6
     }
   ]
 }
