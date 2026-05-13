@@ -7,6 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  [hidden] { display: none !important; }
   body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #0f1117; color: #e1e4ea; padding: 24px; min-height: 100vh; }
 
   .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #2a2d38; }
@@ -106,11 +107,23 @@
 <div class="header">
   <h1>SHILL DASHBOARD</h1>
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="display:flex;gap:4px">
+    <div id="weekToggle" style="display:flex;gap:4px" hidden>
       <button class="wk-btn" data-weeks="4">4W</button>
       <button class="wk-btn active" data-weeks="12">12W</button>
     </div>
     <div class="meta"><span id="updatedAt">loading...</span></div>
+  </div>
+</div>
+
+<!-- KPI: GENERAL -->
+<div class="kpi-section">
+  <div class="kpi-section-title"><span class="dot dot-yellow"></span> GENERAL</div>
+  <div class="kpi-grid">
+    <div class="kpi kpi-accent yellow">
+      <div class="kpi-label">Clicks</div>
+      <div class="kpi-val" id="campaignClicks">—</div>
+      <div class="kpi-sub" id="campaignClicksSub">General Clicks per day</div>
+    </div>
   </div>
 </div>
 
@@ -120,7 +133,7 @@
   <div class="kpi-grid">
     <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="cViews">—</div></div>
     <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="cEngage">—</div></div>
-    <div class="kpi kpi-accent yellow"><div class="kpi-label">Est. Clicks</div><div class="kpi-val" id="cClicks">—</div></div>
+    <div class="kpi kpi-accent yellow"><div class="kpi-label">ER Add-on</div><div class="kpi-val" id="cClicks">—</div><div class="kpi-sub">hidden clicks: views × 0.15%</div></div>
     <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="cTotal">—</div><div class="kpi-sub" id="cActiveSub"></div></div>
     <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="cBans">—</div><div class="kpi-sub" id="cBansSub"></div></div>
   </div>
@@ -132,7 +145,7 @@
   <div class="kpi-grid">
     <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="pViews">—</div></div>
     <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="pEngage">—</div></div>
-    <div class="kpi kpi-accent yellow"><div class="kpi-label">Est. Clicks</div><div class="kpi-val" id="pClicks">—</div></div>
+    <div class="kpi kpi-accent yellow"><div class="kpi-label">ER Add-on</div><div class="kpi-val" id="pClicks">—</div><div class="kpi-sub">hidden clicks: views × 80%</div></div>
     <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="pTotal">—</div></div>
     <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="pBans">—</div></div>
   </div>
@@ -268,7 +281,7 @@ function buildChart(canvasId, labels, datasets) {
           type: 'linear', position: 'right',
           ticks: { color: '#10b981', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
           grid: { drawOnChartArea: false },
-          title: { display: true, text: 'Engage / Clicks', color: '#10b981', font: { size: 10 } }
+          title: { display: true, text: 'Engage / ER add-on', color: '#10b981', font: { size: 10 } }
         },
         yLinks: {
           type: 'linear', position: 'right', offset: true,
@@ -402,7 +415,7 @@ function renderCharts(weekCount) {
   _chartInstances['chartWeeklyComments'] = buildChart('chartWeeklyComments', allWeeks, [
     makeSeries('Views',      cFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', cFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('Clicks',     cFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('ER add-on',  cFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
     makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
     makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yLinks', 'bar'),
   ]);
@@ -412,7 +425,7 @@ function renderCharts(weekCount) {
   _chartInstances['chartWeeklyPosts'] = buildChart('chartWeeklyPosts', allWeeks, [
     makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('Clicks',     pFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('ER add-on',  pFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
     makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
   ]);
 
@@ -461,6 +474,12 @@ async function init() {
   const C = _dashData.comments || [];
   const P = _dashData.posts || [];
   const sum = (arr, k) => arr.reduce((s, d) => s + (d[k]||0), 0);
+  const reportClicks = _dashData.report_period?.clicks || 0;
+
+  document.getElementById('campaignClicks').textContent = N(reportClicks);
+  document.getElementById('campaignClicksSub').textContent = _dashData.report_period
+    ? `General Clicks per day, ${_dashData.report_period.start} → ${_dashData.report_period.end}`
+    : 'General Clicks per day';
 
   document.getElementById('cViews').textContent = N(sum(C,'views'));
   document.getElementById('cEngage').textContent = N(sum(C,'engagement'));
