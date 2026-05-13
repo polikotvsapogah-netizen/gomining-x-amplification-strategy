@@ -497,7 +497,7 @@ function renderCharts(weekCount) {
   _chartInstances['chartWeeklyComments'] = buildChart('chartWeeklyComments', allWeeks, [
     makeSeries('Views',      cFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', cFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('General Clicks', generalClicksWeekly.map(w=>w.clicks), tc.clicks, 'yClicks', 'bar'),
+    makeSeries('General Clicks', generalClicksWeekly.map(w=>w.clicks), tc.clicks, 'yClicks', 'line'),
     makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
     makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yLinks', 'bar'),
   ]);
@@ -507,6 +507,7 @@ function renderCharts(weekCount) {
   _chartInstances['chartWeeklyPosts'] = buildChart('chartWeeklyPosts', allWeeks, [
     makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
+    makeSeries('General Clicks', generalClicksWeekly.map(w=>w.clicks), tc.clicks, 'yClicks', 'line'),
     makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
   ]);
 
