@@ -107,8 +107,8 @@
   <h1>SHILL DASHBOARD</h1>
   <div style="display:flex;align-items:center;gap:12px">
     <div style="display:flex;gap:4px">
-      <button class="wk-btn active" data-weeks="4">4W</button>
-      <button class="wk-btn" data-weeks="12">12W</button>
+      <button class="wk-btn" data-weeks="4">4W</button>
+      <button class="wk-btn active" data-weeks="12">12W</button>
     </div>
     <div class="meta"><span id="updatedAt">loading...</span></div>
   </div>
@@ -264,7 +264,13 @@ function buildChart(canvasId, labels, datasets) {
           type: 'linear', position: 'right',
           ticks: { color: '#10b981', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
           grid: { drawOnChartArea: false },
-          title: { display: true, text: 'Engage / Clicks / Links', color: '#10b981', font: { size: 10 } }
+          title: { display: true, text: 'Engage / Clicks', color: '#10b981', font: { size: 10 } }
+        },
+        yLinks: {
+          type: 'linear', position: 'right', offset: true,
+          ticks: { color: '#8b5cf6', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Links / Bans', color: '#8b5cf6', font: { size: 10 } }
         }
       }
     }
@@ -360,7 +366,7 @@ function generateInsights(weekly, label, hasBans) {
 
 let _dashData = null;
 let _chartInstances = {};
-let _activeWeeks = 4;
+let _activeWeeks = 12;
 
 const tc = {
   views:  { bg: 'rgba(59,130,246,0.12)', border: '#3b82f6' },
@@ -393,8 +399,8 @@ function renderCharts(weekCount) {
     makeSeries('Views',      cFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', cFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
     makeSeries('Clicks',     cFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
-    makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
-    makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yRight', 'bar'),
+    makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
+    makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yLinks', 'bar'),
   ]);
 
   // Posts chart
@@ -403,7 +409,7 @@ function renderCharts(weekCount) {
     makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
     makeSeries('Clicks',     pFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
-    makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yRight', 'bar'),
+    makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
   ]);
 
   // Update chart titles
@@ -446,7 +452,7 @@ async function init() {
     _dashData = await r.json();
   } catch(e) { document.getElementById('updatedAt').textContent = 'error loading data'; return; }
 
-  document.getElementById('updatedAt').textContent = 'updated: ' + _dashData.updated;
+  document.getElementById('updatedAt').textContent = 'updated: ' + _dashData.updated + (_dashData.report_period ? ` · report ${_dashData.report_period.start} → ${_dashData.report_period.end}` : '');
 
   const C = _dashData.comments || [];
   const P = _dashData.posts || [];
