@@ -133,7 +133,6 @@
   <div class="kpi-grid">
     <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="cViews">—</div></div>
     <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="cEngage">—</div></div>
-    <div class="kpi kpi-accent yellow"><div class="kpi-label">ER Add-on</div><div class="kpi-val" id="cClicks">—</div><div class="kpi-sub">hidden clicks: views × 0.15%</div></div>
     <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="cTotal">—</div><div class="kpi-sub" id="cActiveSub"></div></div>
     <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="cBans">—</div><div class="kpi-sub" id="cBansSub"></div></div>
   </div>
@@ -145,7 +144,6 @@
   <div class="kpi-grid">
     <div class="kpi kpi-accent blue"><div class="kpi-label">Views</div><div class="kpi-val" id="pViews">—</div></div>
     <div class="kpi kpi-accent green"><div class="kpi-label">Engagement</div><div class="kpi-val" id="pEngage">—</div></div>
-    <div class="kpi kpi-accent yellow"><div class="kpi-label">ER Add-on</div><div class="kpi-val" id="pClicks">—</div><div class="kpi-sub">hidden clicks: views × 80%</div></div>
     <div class="kpi kpi-accent purple"><div class="kpi-label">Total Links</div><div class="kpi-val" id="pTotal">—</div></div>
     <div class="kpi kpi-accent red"><div class="kpi-label">Suspended</div><div class="kpi-val" id="pBans">—</div></div>
   </div>
@@ -509,7 +507,6 @@ function renderCharts(weekCount) {
   _chartInstances['chartWeeklyPosts'] = buildChart('chartWeeklyPosts', allWeeks, [
     makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('ER add-on',  pFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
     makeSeries('Links',      pFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
   ]);
 
@@ -567,7 +564,6 @@ async function init() {
 
   document.getElementById('cViews').textContent = N(sum(C,'views'));
   document.getElementById('cEngage').textContent = N(sum(C,'engagement'));
-  document.getElementById('cClicks').textContent = N(sum(C,'clicks'));
   document.getElementById('cTotal').textContent = N(sum(C,'total_urls'));
   const cOk = sum(C,'total_urls') - sum(C,'bans');
   document.getElementById('cActiveSub').textContent = `active: ${N(cOk)}`;
@@ -576,7 +572,6 @@ async function init() {
 
   document.getElementById('pViews').textContent = N(sum(P,'views'));
   document.getElementById('pEngage').textContent = N(sum(P,'engagement'));
-  document.getElementById('pClicks').textContent = N(sum(P,'clicks'));
   document.getElementById('pTotal').textContent = N(sum(P,'total_urls'));
   document.getElementById('pBans').textContent = N(sum(P,'bans'));
 
