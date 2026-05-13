@@ -281,7 +281,13 @@ function buildChart(canvasId, labels, datasets) {
           type: 'linear', position: 'right',
           ticks: { color: '#10b981', font: { size: 10 }, callback: v => v >= 1000 ? (v/1000)+'K' : v },
           grid: { drawOnChartArea: false },
-          title: { display: true, text: 'Engage / ER add-on', color: '#10b981', font: { size: 10 } }
+          title: { display: true, text: 'Engagement', color: '#10b981', font: { size: 10 } }
+        },
+        yClicks: {
+          type: 'linear', position: 'right', offset: true,
+          ticks: { color: '#f59e0b', font: { size: 10 }, callback: v => v >= 1000000 ? (v/1000000).toFixed(1)+'M' : v >= 1000 ? (v/1000)+'K' : v },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'General Clicks', color: '#f59e0b', font: { size: 10 } }
         },
         yLinks: {
           type: 'linear', position: 'right', offset: true,
@@ -383,7 +389,7 @@ function generateInsights(weekly, label, hasBans) {
 
 let _dashData = null;
 let _chartInstances = {};
-let _activeWeeks = 12;
+let _activeWeeks = 4;
 
 const tc = {
   views:  { bg: 'rgba(59,130,246,0.12)', border: '#3b82f6' },
@@ -392,6 +398,85 @@ const tc = {
   links:  { bg: 'rgba(139,92,246,0.30)', border: '#8b5cf6' },
   bans:   { bg: 'rgba(239,68,68,0.30)',  border: '#ef4444' },
 };
+
+function parseDateUTC(dateStr) {
+  return new Date(dateStr + 'T00:00:00Z');
+}
+
+function addDaysUTC(date, days) {
+  const d = new Date(date);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d;
+}
+
+function dateKey(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function bucketLabel(start, end) {
+  return `${shortDate(dateKey(start))}–${shortDate(dateKey(end))}`;
+}
+
+function makeReportWeeks(count = 4) {
+  const rp = _dashData.report_period || {};
+  if (!rp.start || !rp.end) {
+    const rawWeeks = [...new Set([
+      ...(_dashData.comments || []).map(d => isoWeek(d.date)),
+      ...(_dashData.posts || []).map(d => isoWeek(d.date))
+    ])].sort();
+    const fallback = fillWeeks(rawWeeks, count);
+    return fallback.map(label => ({ label, start: null, end: null }));
+  }
+
+  const start = parseDateUTC(rp.start);
+  const end = parseDateUTC(rp.end);
+  const totalDays = Math.floor((end - start) / 86400000) + 1;
+  const base = Math.floor(totalDays / count);
+  const extra = totalDays - base * count;
+  const weeks = [];
+  let cursor = start;
+  for (let i = 0; i < count; i++) {
+    const size = base + (i === count - 1 ? extra : 0);
+    const bucketStart = new Date(cursor);
+    const bucketEnd = i === count - 1 ? end : addDaysUTC(cursor, size - 1);
+    weeks.push({
+      label: bucketLabel(bucketStart, bucketEnd),
+      start: dateKey(bucketStart),
+      end: dateKey(bucketEnd),
+    });
+    cursor = addDaysUTC(bucketEnd, 1);
+  }
+  return weeks;
+}
+
+function bucketForDate(dateStr, reportWeeks) {
+  return reportWeeks.find(w => (!w.start || dateStr >= w.start) && (!w.end || dateStr <= w.end));
+}
+
+function aggregateReportWeeks(daily, reportWeeks) {
+  const weeks = Object.fromEntries(reportWeeks.map(w => [w.label, {
+    week: w.label, views: 0, engagement: 0, clicks: 0, bans: 0, total_urls: 0
+  }]));
+  for (const d of daily) {
+    const bucket = bucketForDate(d.date, reportWeeks);
+    if (!bucket) continue;
+    const b = weeks[bucket.label];
+    b.views += d.views || 0;  b.engagement += d.engagement || 0;
+    b.clicks += d.clicks || 0;  b.bans += d.bans || 0;  b.total_urls += d.total_urls || 0;
+  }
+  return reportWeeks.map(w => weeks[w.label]);
+}
+
+function aggregateGeneralClicks(reportWeeks) {
+  const weeks = Object.fromEntries(reportWeeks.map(w => [w.label, { week: w.label, clicks: 0 }]));
+  const rows = _dashData.report_period?.daily_clicks || [];
+  for (const d of rows) {
+    const bucket = bucketForDate(d.date, reportWeeks);
+    if (!bucket) continue;
+    weeks[bucket.label].clicks += d.clicks || 0;
+  }
+  return reportWeeks.map(w => weeks[w.label]);
+}
 
 function renderCharts(weekCount) {
   // Destroy old charts
@@ -403,25 +488,24 @@ function renderCharts(weekCount) {
   const C = _dashData.comments || [];
   const P = _dashData.posts || [];
 
-  const cWeekly = aggregateWeekly(C).slice(-weekCount);
-  const pWeekly = aggregateWeekly(P).slice(-weekCount);
-  const rawWeeks = [...new Set([...cWeekly.map(w=>w.week),...pWeekly.map(w=>w.week)])].sort().slice(-weekCount);
-  const allWeeks = fillWeeks(rawWeeks, weekCount);
-  const cwMap = Object.fromEntries(cWeekly.map(w=>[w.week,w]));
-  const pwMap = Object.fromEntries(pWeekly.map(w=>[w.week,w]));
+  const reportWeeks = makeReportWeeks(weekCount);
+  const allWeeks = reportWeeks.map(w => w.label);
+  const cWeekly = aggregateReportWeeks(C, reportWeeks);
+  const pWeekly = aggregateReportWeeks(P, reportWeeks);
+  const generalClicksWeekly = aggregateGeneralClicks(reportWeeks);
 
   // Comments chart
-  const cFull = allWeeks.map(w => cwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  const cFull = cWeekly;
   _chartInstances['chartWeeklyComments'] = buildChart('chartWeeklyComments', allWeeks, [
     makeSeries('Views',      cFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', cFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
-    makeSeries('ER add-on',  cFull.map(w=>w.clicks),     tc.clicks, 'yRight', 'line'),
+    makeSeries('General Clicks', generalClicksWeekly.map(w=>w.clicks), tc.clicks, 'yClicks', 'bar'),
     makeSeries('Links',      cFull.map(w=>w.total_urls), tc.links,  'yLinks', 'bar'),
     makeSeries('Bans',       cFull.map(w=>w.bans),       tc.bans,   'yLinks', 'bar'),
   ]);
 
   // Posts chart
-  const pFull = allWeeks.map(w => pwMap[w] || {week:w, views:0, engagement:0, clicks:0, total_urls:0, bans:0});
+  const pFull = pWeekly;
   _chartInstances['chartWeeklyPosts'] = buildChart('chartWeeklyPosts', allWeeks, [
     makeSeries('Views',      pFull.map(w=>w.views),      tc.views,  'yLeft',  'area'),
     makeSeries('Engagement', pFull.map(w=>w.engagement), tc.engage, 'yRight', 'line'),
@@ -431,9 +515,9 @@ function renderCharts(weekCount) {
 
   // Update chart titles
   document.querySelector('#chartWeeklyComments').closest('.chart-card').querySelector('h2').textContent =
-    `Comments — Weekly (last ${weekCount} weeks)`;
+    `Comments — 4 report weeks`;
   document.querySelector('#chartWeeklyPosts').closest('.chart-card').querySelector('h2').textContent =
-    `Posts — Weekly (last ${weekCount} weeks)`;
+    `Posts — 4 report weeks`;
 
   // Analytics & WoW
   document.getElementById('insightsComments').innerHTML = generateInsights(cWeekly, 'Comments', true);
