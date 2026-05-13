@@ -150,37 +150,41 @@
   </div>
 </div>
 
-<!-- ANALYTICS INSIGHTS -->
-<h2 class="section-title">Analytics</h2>
-<div class="insights-grid">
-  <div class="card">
-    <h3>Comments — Efficiency</h3>
-    <div id="insightsComments"></div>
+<!-- ANALYTICS INSIGHTS — temporarily hidden until these detail blocks are needed again -->
+<section id="detailsAnalytics" hidden>
+  <h2 class="section-title">Analytics</h2>
+  <div class="insights-grid">
+    <div class="card">
+      <h3>Comments — Efficiency</h3>
+      <div id="insightsComments"></div>
+    </div>
+    <div class="card">
+      <h3>Posts — Efficiency</h3>
+      <div id="insightsPosts"></div>
+    </div>
   </div>
-  <div class="card">
-    <h3>Posts — Efficiency</h3>
-    <div id="insightsPosts"></div>
-  </div>
-</div>
+</section>
 
-<!-- WoW SUMMARY -->
-<h2 class="section-title">Week-over-Week</h2>
-<div class="wow-grid">
-  <div class="card">
-    <h3>Comments — WoW</h3>
-    <table class="wow-table">
-      <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Active</th><th>Bans</th><th>Views/Link</th></tr></thead>
-      <tbody id="wowComments"></tbody>
-    </table>
+<!-- WoW SUMMARY — temporarily hidden until these detail blocks are needed again -->
+<section id="detailsWow" hidden>
+  <h2 class="section-title">Week-over-Week</h2>
+  <div class="wow-grid">
+    <div class="card">
+      <h3>Comments — WoW</h3>
+      <table class="wow-table">
+        <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Active</th><th>Bans</th><th>Views/Link</th></tr></thead>
+        <tbody id="wowComments"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Posts — WoW</h3>
+      <table class="wow-table">
+        <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Views/Link</th></tr></thead>
+        <tbody id="wowPosts"></tbody>
+      </table>
+    </div>
   </div>
-  <div class="card">
-    <h3>Posts — WoW</h3>
-    <table class="wow-table">
-      <thead><tr><th>Week</th><th>Views</th><th>Engage</th><th>Clicks</th><th>Links</th><th>Views/Link</th></tr></thead>
-      <tbody id="wowPosts"></tbody>
-    </table>
-  </div>
-</div>
+</section>
 
 <script>
 const N = n => n != null ? n.toLocaleString('en-US') : '—';
