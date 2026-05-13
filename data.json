@@ -1,126 +1,15 @@
 {
-  "updated": "2026-05-13 07:48 UTC",
-  "_spreadsheet_title": "GoMining X AMPLIFICATION STRATEGY",
+  "updated": "2026-05-13 08:16 UTC",
   "comments": [
     {
-      "date": "2026-03-07",
-      "views": 16391,
-      "engagement": 1072,
-      "clicks": 441,
-      "likes": 601,
-      "rts": 30,
-      "bans": 86,
-      "total_urls": 90
-    },
-    {
-      "date": "2026-03-08",
-      "views": 23538,
-      "engagement": 952,
-      "clicks": 392,
-      "likes": 560,
-      "rts": 0,
-      "bans": 123,
-      "total_urls": 134
-    },
-    {
-      "date": "2026-03-09",
-      "views": 9373,
+      "date": "2026-03-20",
+      "views": 6322,
       "engagement": 292,
       "clicks": 120,
-      "likes": 172,
-      "rts": 0,
-      "bans": 38,
-      "total_urls": 56
-    },
-    {
-      "date": "2026-03-10",
-      "views": 1066,
-      "engagement": 6,
-      "clicks": 2,
-      "likes": 4,
-      "rts": 0,
-      "bans": 1,
-      "total_urls": 8
-    },
-    {
-      "date": "2026-03-13",
-      "views": 35615,
-      "engagement": 1467,
-      "clicks": 604,
-      "likes": 840,
-      "rts": 23,
-      "bans": 124,
-      "total_urls": 275
-    },
-    {
-      "date": "2026-03-14",
-      "views": 72171,
-      "engagement": 3520,
-      "clicks": 1449,
-      "likes": 2022,
-      "rts": 49,
-      "bans": 231,
-      "total_urls": 548
-    },
-    {
-      "date": "2026-03-15",
-      "views": 54453,
-      "engagement": 923,
-      "clicks": 380,
-      "likes": 542,
-      "rts": 1,
-      "bans": 170,
-      "total_urls": 489
-    },
-    {
-      "date": "2026-03-16",
-      "views": 60361,
-      "engagement": 3231,
-      "clicks": 1330,
-      "likes": 1901,
-      "rts": 0,
-      "bans": 204,
-      "total_urls": 552
-    },
-    {
-      "date": "2026-03-17",
-      "views": 37597,
-      "engagement": 2091,
-      "clicks": 861,
-      "likes": 1165,
-      "rts": 65,
-      "bans": 480,
-      "total_urls": 497
-    },
-    {
-      "date": "2026-03-18",
-      "views": 39528,
-      "engagement": 2089,
-      "clicks": 860,
-      "likes": 1218,
-      "rts": 11,
-      "bans": 536,
-      "total_urls": 551
-    },
-    {
-      "date": "2026-03-19",
-      "views": 37544,
-      "engagement": 4142,
-      "clicks": 1705,
-      "likes": 2376,
-      "rts": 61,
-      "bans": 459,
-      "total_urls": 483
-    },
-    {
-      "date": "2026-03-20",
-      "views": 48105,
-      "engagement": 2915,
-      "clicks": 1200,
-      "likes": 1607,
-      "rts": 108,
-      "bans": 548,
-      "total_urls": 581
+      "likes": 163,
+      "rts": 9,
+      "bans": 85,
+      "total_urls": 87
     },
     {
       "date": "2026-03-21",
@@ -445,27 +334,7 @@
   ],
   "posts": [
     {
-      "date": "2026-03-07",
-      "views": 0,
-      "likes": 0,
-      "rts": 0,
-      "bans": 0,
-      "total_urls": 0,
-      "clicks": 441,
-      "engagement": 441
-    },
-    {
-      "date": "2026-03-08",
-      "views": 0,
-      "likes": 0,
-      "rts": 0,
-      "bans": 0,
-      "total_urls": 0,
-      "clicks": 392,
-      "engagement": 392
-    },
-    {
-      "date": "2026-03-09",
+      "date": "2026-03-20",
       "views": 0,
       "likes": 0,
       "rts": 0,
@@ -475,104 +344,14 @@
       "engagement": 120
     },
     {
-      "date": "2026-03-10",
-      "views": 0,
-      "likes": 0,
-      "rts": 0,
-      "bans": 0,
-      "total_urls": 0,
-      "clicks": 2,
-      "engagement": 2
-    },
-    {
-      "date": "2026-03-13",
-      "views": 2488,
-      "engagement": 661,
-      "clicks": 604,
-      "likes": 50,
-      "rts": 7,
-      "bans": 3,
-      "total_urls": 46
-    },
-    {
-      "date": "2026-03-14",
-      "views": 14557,
-      "engagement": 1731,
-      "clicks": 1449,
-      "likes": 241,
-      "rts": 41,
-      "bans": 5,
-      "total_urls": 135
-    },
-    {
-      "date": "2026-03-15",
-      "views": 1582,
-      "engagement": 436,
-      "clicks": 380,
-      "likes": 50,
-      "rts": 6,
-      "bans": 1,
-      "total_urls": 22
-    },
-    {
-      "date": "2026-03-16",
-      "views": 1081,
-      "engagement": 1352,
-      "clicks": 1330,
-      "likes": 19,
-      "rts": 3,
-      "bans": 0,
-      "total_urls": 6
-    },
-    {
-      "date": "2026-03-17",
-      "views": 2073,
-      "engagement": 909,
-      "clicks": 861,
-      "likes": 39,
-      "rts": 9,
-      "bans": 1,
-      "total_urls": 20
-    },
-    {
-      "date": "2026-03-18",
-      "views": 14248,
-      "engagement": 1140,
-      "clicks": 860,
-      "likes": 246,
-      "rts": 34,
-      "bans": 3,
-      "total_urls": 62
-    },
-    {
-      "date": "2026-03-19",
-      "views": 10239,
-      "engagement": 1905,
-      "clicks": 1705,
-      "likes": 174,
-      "rts": 26,
-      "bans": 4,
-      "total_urls": 40
-    },
-    {
-      "date": "2026-03-20",
-      "views": 19122,
-      "engagement": 1524,
-      "clicks": 1200,
-      "likes": 280,
-      "rts": 44,
-      "bans": 1,
-      "total_urls": 45
-    },
-    {
       "date": "2026-03-21",
-      "views": 16567,
-      "engagement": 1054,
+      "views": 993,
+      "engagement": 843,
       "clicks": 825,
-      "likes": 200,
-      "rts": 29,
-      "bans": 3,
-      "total_urls": 33
+      "likes": 16,
+      "rts": 2,
+      "bans": 1,
+      "total_urls": 5
     },
     {
       "date": "2026-03-22",
