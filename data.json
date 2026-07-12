@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-13 13:25 UTC",
+  "updated": "2026-07-12 22:58 UTC",
   "comments": [
     {
       "date": "2026-05-12",
@@ -58,25 +58,25 @@
     },
     {
       "date": "2026-05-17",
-      "views": 20932,
-      "engagement": 136,
-      "clicks": 31,
-      "likes": 130,
+      "views": 9830,
+      "engagement": 122,
+      "clicks": 15,
+      "likes": 116,
       "rts": 6,
       "replies": 0,
       "bans": 60,
-      "total_urls": 79
+      "total_urls": 61
     },
     {
       "date": "2026-05-18",
-      "views": 32245,
-      "engagement": 134,
-      "clicks": 48,
-      "likes": 120,
+      "views": 27357,
+      "engagement": 130,
+      "clicks": 41,
+      "likes": 116,
       "rts": 14,
       "replies": 0,
       "bans": 24,
-      "total_urls": 79
+      "total_urls": 72
     },
     {
       "date": "2026-05-19",
@@ -311,47 +311,47 @@
     },
     {
       "date": "2026-06-09",
-      "views": 19972,
-      "engagement": 194,
-      "clicks": 30,
-      "likes": 190,
+      "views": 17327,
+      "engagement": 222,
+      "clicks": 26,
+      "likes": 218,
       "rts": 4,
       "replies": 0,
-      "bans": 86,
-      "total_urls": 119
+      "bans": 109,
+      "total_urls": 109
     },
     {
       "date": "2026-06-10",
-      "views": 13543,
-      "engagement": 37,
-      "clicks": 20,
-      "likes": 37,
+      "views": 0,
+      "likes": 0,
       "rts": 0,
       "replies": 0,
       "bans": 0,
-      "total_urls": 81
+      "total_urls": 0,
+      "clicks": 0,
+      "engagement": 0
     },
     {
       "date": "2026-06-11",
-      "views": 20387,
-      "engagement": 68,
-      "clicks": 31,
-      "likes": 68,
+      "views": 0,
+      "likes": 0,
       "rts": 0,
       "replies": 0,
       "bans": 0,
-      "total_urls": 124
+      "total_urls": 0,
+      "clicks": 0,
+      "engagement": 0
     },
     {
       "date": "2026-06-12",
-      "views": 23131,
-      "engagement": 60,
-      "clicks": 35,
-      "likes": 60,
+      "views": 549,
+      "engagement": 4,
+      "clicks": 1,
+      "likes": 4,
       "rts": 0,
       "replies": 0,
-      "bans": 0,
-      "total_urls": 140
+      "bans": 2,
+      "total_urls": 4
     }
   ],
   "posts": [
