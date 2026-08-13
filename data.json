@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-13 10:34 UTC",
+  "updated": "2026-08-13 10:36 UTC",
   "posts": [
     {
       "date": "2026-07-12",
@@ -91,113 +91,113 @@
     },
     {
       "date": "2026-07-20",
-      "views": 65140,
-      "engagement": 415,
-      "clicks": 52112,
-      "likes": 414,
+      "views": 77442,
+      "engagement": 490,
+      "clicks": 61954,
+      "likes": 489,
       "rts": 1,
       "replies": 0,
       "bans": 0,
-      "total_urls": 49
+      "total_urls": 59
     },
     {
       "date": "2026-07-21",
-      "views": 39276,
-      "engagement": 271,
-      "clicks": 31421,
-      "likes": 262,
-      "rts": 9,
-      "replies": 0,
-      "bans": 0,
-      "total_urls": 29
-    },
-    {
-      "date": "2026-07-22",
-      "views": 72070,
-      "engagement": 454,
-      "clicks": 57656,
-      "likes": 449,
-      "rts": 5,
-      "replies": 0,
-      "bans": 0,
-      "total_urls": 54
-    },
-    {
-      "date": "2026-07-23",
-      "views": 74713,
-      "engagement": 459,
-      "clicks": 59770,
-      "likes": 455,
-      "rts": 4,
-      "replies": 0,
-      "bans": 0,
-      "total_urls": 56
-    },
-    {
-      "date": "2026-07-24",
-      "views": 57355,
-      "engagement": 382,
-      "clicks": 45884,
-      "likes": 372,
+      "views": 52525,
+      "engagement": 358,
+      "clicks": 42020,
+      "likes": 348,
       "rts": 10,
-      "replies": 0,
-      "bans": 0,
-      "total_urls": 44
-    },
-    {
-      "date": "2026-07-25",
-      "views": 51955,
-      "engagement": 351,
-      "clicks": 41564,
-      "likes": 345,
-      "rts": 6,
       "replies": 0,
       "bans": 0,
       "total_urls": 39
     },
     {
-      "date": "2026-07-26",
-      "views": 47310,
-      "engagement": 325,
-      "clicks": 37848,
-      "likes": 319,
+      "date": "2026-07-22",
+      "views": 85668,
+      "engagement": 543,
+      "clicks": 68534,
+      "likes": 537,
       "rts": 6,
       "replies": 0,
       "bans": 0,
-      "total_urls": 36
+      "total_urls": 64
     },
     {
-      "date": "2026-07-27",
-      "views": 66249,
-      "engagement": 448,
-      "clicks": 52999,
-      "likes": 443,
-      "rts": 5,
-      "replies": 0,
-      "bans": 0,
-      "total_urls": 51
-    },
-    {
-      "date": "2026-07-28",
-      "views": 71253,
-      "engagement": 473,
-      "clicks": 57002,
-      "likes": 469,
+      "date": "2026-07-23",
+      "views": 87864,
+      "engagement": 544,
+      "clicks": 70291,
+      "likes": 540,
       "rts": 4,
       "replies": 0,
       "bans": 0,
-      "total_urls": 55
+      "total_urls": 66
+    },
+    {
+      "date": "2026-07-24",
+      "views": 70467,
+      "engagement": 478,
+      "clicks": 56374,
+      "likes": 466,
+      "rts": 12,
+      "replies": 0,
+      "bans": 0,
+      "total_urls": 54
+    },
+    {
+      "date": "2026-07-25",
+      "views": 64533,
+      "engagement": 429,
+      "clicks": 51626,
+      "likes": 423,
+      "rts": 6,
+      "replies": 0,
+      "bans": 0,
+      "total_urls": 49
+    },
+    {
+      "date": "2026-07-26",
+      "views": 60578,
+      "engagement": 403,
+      "clicks": 48462,
+      "likes": 397,
+      "rts": 6,
+      "replies": 0,
+      "bans": 0,
+      "total_urls": 46
+    },
+    {
+      "date": "2026-07-27",
+      "views": 79624,
+      "engagement": 534,
+      "clicks": 63699,
+      "likes": 528,
+      "rts": 6,
+      "replies": 0,
+      "bans": 0,
+      "total_urls": 61
+    },
+    {
+      "date": "2026-07-28",
+      "views": 0,
+      "likes": 0,
+      "rts": 0,
+      "replies": 0,
+      "bans": 0,
+      "total_urls": 0,
+      "clicks": 0,
+      "engagement": 0
     },
     {
       "date": "2026-07-29",
-      "views": 74311,
-      "engagement": 483,
-      "clicks": 59449,
-      "likes": 478,
-      "rts": 5,
+      "views": 40931,
+      "engagement": 282,
+      "clicks": 32745,
+      "likes": 278,
+      "rts": 4,
       "replies": 0,
       "bans": 0,
-      "total_urls": 57
+      "total_urls": 32
     },
     {
       "date": "2026-07-30",
